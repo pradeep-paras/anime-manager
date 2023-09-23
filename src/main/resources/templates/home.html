@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <section>
+        <div style="text-align: center;margin-top: 150px;">
+            <div class="search-box">
+                <img class="search-image" style="width: 100%;" th:src="@{/image/naruto.jpg}"/>
+                <form style="margin-top: -25px;" method="post" th:action="@{/search}" th:value="${search}">
+                    <div class="search-div">
+                        <input placeholder="Search anime.." name="search" th:value="${search}" class="search-input" />
+                        <button class="search-button new-button" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="home-box">
+            <div class="container-box">
+                <div th:each="a : ${anime}" class="container-image">
+                <a style="display: flex;flex-direction: column;">
+                    <div class="box-image-div"><img class="box-image" th:src="${a.imageUrl}"/></div>
+                    <div style="position: absolute; bottom: 24px; text-align: center; width: 100%;"><a th:href="@{'/anime/' + ${a.aId}}"><button class="button-view" role="button">View Details</button></a></div>
+                    <span class="main-anime-text" th:text="${a.anime_name}"></span>
+                </a>
+                </div>    
+            </div>
+
+            <!-- pagination -->
+            <div class="pagination-box">
+                <nav aria-label="...">
+                <ul th:if="${anime}" class="pagination1">
+                    <li th:if="${currentPage != 0}" class="page-item1">
+                    <a th:href="@{'/'+${currentPage - 1}}" class="page-link1" tabindex="-1">Previous</a>
+                    </li>
+                    <li th:classappend="${currentPage== i-1? 'active1': ''}" th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item1">
+                    <a th:text="${i}" th:href="@{'/' + ${i-1}}" class="page-link1"></a></li>
+                    
+                    <li th:if="${currentPage + 1 != totalPage}" class="page-item1">
+                    <a th:href="@{'/'+${currentPage + 1}}" class="page-link1" href="#">Next</a>
+                    </li>
+                </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

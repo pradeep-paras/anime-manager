@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+</head>
+<body>
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 offset-md-3">
+      <div class="card card1 my-5">
+          <div th:classappend="${session.message.type}" th:if="${session.message}" class="alert" role="alert">
+            <p th:text="${session.message.content}"></p>
+            
+            <th:block th:text="${@sessionHelper.removeMessageFromSession()}" class="text-center"></th:block>
+          </div>
+        <form class="card-body cardbody-color p-lg-5" novalidate th:action="@{/do_register}" method="post" th:object="${user}">
+          <div class="form-group">
+            <label class="signup-label" for="user_name">User Name</label>
+            <input
+              name="name"
+              th:value="${user.name}"
+              type="text"
+              autocomplete="off"
+              class="form-control input-mail"
+              th:classappend="${#fields.hasErrors('name') ? 'is-invalid' : ''}" 
+              id="user_name" 
+              aria-describedby="emailHelp" 
+              placeholder="Enter Name">
+
+              <div class="invalid-feedback" th:each="e : ${#fields.errors('name')}" th:text="${e}">
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label class="signup-label" for="email">Email</label>
+            <input 
+              name="email"
+              th:value="${user.email}"
+              type="email" 
+              th:classappend="${#fields.hasErrors('email') ? 'is-invalid' : ''}" 
+              autocomplete="off"
+              class="form-control input-mail" 
+              id="email" 
+              placeholder="Email">
+            <small id="emailHelp" class="form-text signup-label">We'll never share your email with anyone else.</small>
+            <div class="invalid-feedback" th:each="e : ${#fields.errors('email')}" th:text="${e}">
+            </div>
+          </div>
+
+          <div class="form-group">
+              <label class="signup-label" for="password">Password</label>
+              <input
+                name="password"
+                type="password" 
+                class="form-control input-mail" 
+                id="password" 
+                th:classappend="${#fields.hasErrors('password') ? 'is-invalid' : ''}" 
+                placeholder="Enter Here">
+              <small id="emailHelp" class="form-text signup-label">We'll never share your email with anyone else.</small>
+              <div class="invalid-feedback" th:each="e : ${#fields.errors('password')}" th:text="${e}">
+              </div>
+            </div>
+
+          <div class="form-check check_box">
+            <input name="check_box" type="checkbox" class="form-check-input" id="check_box">
+            <label class="form-check-label ml-3" for="check_box">Accept termas and conditions</label>
+          </div>
+
+          <div>
+            <button type="submit" class="btn btn-color px-5 mb-5 w-40 mr-3">Submit</button>
+            <button type="reset" class="btn btn-color px-5 mb-5 w-40">Reset</button>
+          </div>
+        </form>  
+      </div>
+      </div>
+    </div>
+    </div>
+    </section>
+</body>
+</html>

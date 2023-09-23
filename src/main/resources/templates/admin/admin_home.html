@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
+</head>
+<body>
+    <section>     
+        <h1 style="margin-left: 120px; font-size: 40px; color: transparent; -webkit-text-stroke: 1px white;">Animes</h1>        
+        <div class="main-box">
+          <div class="add-button"><div class="text-center">
+            <button data-toggle="modal" data-target="#exampleModal" class="btn btn-colormb-5 w-20">Add anime</button>
+          </div>
+        </div>
+
+        <!-- https://codepen.io/josephespana/pen/MeKroz -->
+        
+        <!-- Modal for adding data -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div style="color:white; background-color: #000000d9;" class="modal-content">
+              <div class="modal-header" style="font-family: fantasy;
+                  letter-spacing: 3px;
+                  -webkit-text-stroke: 1px #fff;
+                  color: transparent;">
+                <h5 class="modal-title" id="exampleModalLabel">Add Anime</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="#"
+                  class="card-body cardbody-color p-lg-5"
+                  th:object="${anime}"
+                  enctype="multipart/form-data"
+                  method="POST"
+                  th:action="@{/admin/process-anime}">
+  
+                  <!-- alert box -->
+                  <div th:if="${session.message}" class="container">
+                      <div th:classappend="${'alert-'+session.message.type}" class="alert" role="alert">
+                          <span th:text="${session.message.content}"></span>
+                      </div>
+                  </div>
+                  <th:block th:text="${@sessionHelper.removeMessageFromSession()}" class="text-center"></th:block>
+                  
+                  <!-- Anime Name -->
+                  <div class="mb-4">
+                      <label>Anime Name</label>
+                      <input type="text" autocomplete="off" id="anime_name" name="anime_name" placeholder="Enter Name here" class="form-control input-mail">
+                    </div>
+  
+                  <!-- image Url -->
+                  <div class="mb-4">
+                      <label>Anime Image</label>
+                      <input  type="text" id="imageUrl" name="imageUrl" placeholder="Paste url here" class="form-control input-mail">
+                  </div>
+  
+                  <!-- status -->
+                  <div class="mb-4">
+                      <label>Status</label>
+                      <input type="text" id="status" name="status" placeholder="Enter anime status" class="form-control input-mail">
+                  </div>
+  
+                  <!-- Description -->
+                  <div class="form-group mt-3">
+                      <label>Description</label>
+                      <textarea placeholder="Enter description" name="description" id="description" class="form-control input-mail" rows="10"></textarea>    
+                  </div>
+  
+                  <div class="text-center">
+                      <button type="submit" class="btn btn-color w-100 save-anime">Save</button>
+                  </div>
+
+                  <div class="text-center">
+                    <button type="button" data-dismiss="modal" class="btn btn-color w-100 close-anime">Close</button>
+                  </div>
+            
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Modal for updating data -->
+        <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div style="color:white; background-color: #000000d9;" class="modal-content">
+              <div class="modal-header" style="font-family: fantasy;
+                  letter-spacing: 3px;
+                  -webkit-text-stroke: 1px #fff;
+                  color: transparent;">
+                <h5 class="modal-title" id="exampleModalLabel">Add Anime</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="#"
+                  class="card-body cardbody-color p-lg-5"
+                  th:object="${anime1}"
+                  enctype="multipart/form-data"
+                  method="POST"
+                  th:action="@{/admin/process-anime}">
+  
+                  <!-- alert box -->
+                  <div th:if="${session.message}" class="container">
+                      <div th:classappend="${'alert-'+session.message.type}" class="alert" role="alert">
+                          <span th:text="${session.message.content}"></span>
+                      </div>
+                  </div>
+                  <th:block th:text="${@sessionHelper.removeMessageFromSession()}" class="text-center"></th:block>
+                  
+                  <!-- Anime Name -->
+                  <div class="mb-4">
+                      <label>Anime Name</label>
+                      <input th:value="${anime_name}" type="text" autocomplete="off" id="anime_name" name="anime_name" placeholder="Enter Name here" class="form-control input-mail">
+                    </div>
+  
+                  <!-- image Url -->
+                  <div class="mb-4">
+                      <label>Anime Image</label>
+                      <input th:value="${imageUrl}" type="text" id="imageUrl" name="imageUrl" placeholder="Paste url here" class="form-control input-mail">
+                  </div>
+  
+                  <!-- status -->
+                  <div class="mb-4">
+                      <label>Status</label>
+                      <input th:value="${status}" type="text" id="status" name="status" placeholder="Enter anime status" class="form-control input-mail">
+                  </div>
+  
+                  <!-- Description -->
+                  <div class="form-group mt-3">
+                      <label>Description</label>
+                      <textarea th:text="${description}" placeholder="Enter description" name="description" id="description" class="form-control input-mail" rows="10"></textarea>    
+                  </div>
+  
+                  <div class="text-center">
+                      <button type="submit" class="btn btn-color w-100 save-anime">Update</button>
+                  </div>
+
+                  <div class="text-center">
+                    <button type="button" data-dismiss="modal" class="btn btn-color w-100 close-anime">Close</button>
+                  </div>
+            
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Modal -->
+            
+          <div class="container-box1">
+              <div class="container-image1" th:each="a : ${anime}">
+                <div th:text="${a.anime_name}"></div>
+                <div style="border: 3px solid white; border-radius: 3px;"><img class="image-box1" style="width: 180px; height: 270px;" th:src="${a.imageUrl}"/></div>
+                <div style="position: absolute; bottom: 70px;">
+                  <form th:action="@{'update-anime/'+ ${a.aId}}" method="post">
+                    <button type="submit" class="button-update">Update</button>
+                  </form>
+                </div>
+                <div style="position: absolute; bottom: 24px;"><button class="button-delete" role="button" th:onclick="|deleteAnime(${a.aId})|">Delete</button></div>
+                <div th:text="${a.status}"></div>
+              </div>
+            </div>
+
+          <!-- pagination -->
+          <div class="pagination-box">
+            <nav aria-label="...">
+            <ul th:if="${anime}" class="pagination1">
+                <li th:if="${currentPage != 0}" class="page-item1">
+                <a th:href="@{'/'+${currentPage - 1}}" class="page-link1" tabindex="-1">Previous</a>
+                </li>
+                <li th:classappend="${currentPage== i-1? 'active1': ''}" th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item1">
+                <a th:text="${i}" th:href="@{'/' + ${i-1}}" class="page-link1"></a></li>
+                
+                <li th:if="${currentPage + 1 != totalPage}" class="page-item1">
+                <a th:href="@{'/'+${currentPage + 1}}" class="page-link1" href="#">Next</a>
+                </li>
+            </ul>
+            </nav>
+        </div>
+
+        </div>
+
+    </section>
+</body>
+</html>

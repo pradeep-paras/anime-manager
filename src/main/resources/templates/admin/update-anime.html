@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Contact</title>
+</head>
+<body>
+    <section>
+        <h1>Contact Details</h1>
+        <div style="text-align: center;">
+        <div style="width: 50%; border: 2px solid #ffffff; color: white; border-radius: 2px; background-color: #000000b0;">
+            <div class="modal-body">
+                <form action="#"
+                  class="card-body cardbody-color p-lg-5"
+                  th:object="${anime}"
+                  enctype="multipart/form-data"
+                  method="POST"
+                  th:action="@{/admin/process-update-anime}">
+  
+                  <!-- alert box -->
+                  <div th:if="${session.message}" class="container">
+                      <div th:classappend="${'alert-'+session.message.type}" class="alert" role="alert">
+                          <span th:text="${session.message.content}"></span>
+                      </div>
+                  </div>
+                  <th:block th:text="${@sessionHelper.removeMessageFromSession()}" class="text-center"></th:block>
+                  <input style="display: none;" name="aId" th:value="${anime.aId}"/>
+                  <!-- Anime Name -->
+                  <div class="mb-4">
+                      <label>Anime Name</label>
+                      <input th:value="${anime.anime_name}" type="text" autocomplete="off" id="anime_name" name="anime_name" placeholder="Enter Name here" class="form-control input-mail">
+                    </div>
+  
+                  <!-- image Url -->
+                  <div class="mb-4">
+                      <label>Anime Image</label>
+                      <input th:value="${anime.imageUrl}" type="text" id="imageUrl" name="imageUrl" placeholder="Paste url here" class="form-control input-mail">
+                  </div>
+  
+                  <!-- status -->
+                  <div class="mb-4">
+                      <label>Status</label>
+                      <input th:value="${anime.status}" type="text" id="status" name="status" placeholder="Enter anime status" class="form-control input-mail">
+                  </div>
+  
+                  <!-- Description -->
+                  <div class="form-group mt-3">
+                      <label>Description</label>
+                      <textarea th:text="${anime.description}" placeholder="Enter description" name="description" id="description" class="form-control input-mail" rows="10"></textarea>    
+                  </div>
+  
+                  <div class="text-center">
+                      <button type="submit" class="btn btn-color w-100 save-anime">Update</button>
+                  </div>
+
+                  <div class="text-center">
+                    <button type="button" onclick="cancelUpdate()" class="btn btn-color w-100 close-anime">Cancel</button>
+                  </div>
+            
+                </form>
+              </div>
+        </div>
+    </div>
+    </section>
+</body>
+</html>

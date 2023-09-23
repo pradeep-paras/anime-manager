@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{user/base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${user.name}"></title>
+</head>
+<body>
+    <section>
+        <!-- search -->
+        <!-- <form style="margin-left: 140px;" class="form-inline">
+          <div>
+            <input onkeyup="search()" id="search-input" class="form-control mr-sm-2 search-container" type="search" placeholder="Search" aria-label="Search" />
+            <div class="search-result"></div>
+          </div>
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form> -->
+      
+        <div class="">
+            <div class="show-ratings">
+                <div th:each="r : ${ratings}" class="rating-box">
+                  <div class="rating-name-star">
+                    <div class="rating-star-box">
+                      <div th:text="${r.rate}" class="rating-pointer"></div><span style="color:#02b148;">&starf;</span>
+                    </div>
+                    <div th:text="${r.anime.anime_name}" class="rating-name">name</div>
+                    </div>
+                  <div th:text="${r.review}" class="rating-description-box">
+                      Description
+                  </div>
+                  <button th:onclick="|deleteReview(${r.rId})|" class="rating-button">remove</button>
+                </div>
+                <!-- <div th:text="${r.rate}"></div> -->
+                <!-- <td><a th:href="@{'/user/show-contact/' + ${c.cId}}"><span th:text="${c.email}"></span></a></td> -->
+                <!-- <div th:text="${r.review}"></div> -->
+                <!-- <td>
+                    <form
+                        method="POST"
+                        th:action="@{'/user/update-contact/' + ${c.cId}}"
+                        class="=mt-2"
+                    >
+                    <button type="submit">Update</button>
+                  </form><button th:onclick="|deleteContact(${c.cId})|">Delete</button></td> -->
+            </div>
+          </div>
+
+          <!-- pagination -->
+          <div class="pagination-box">
+          <nav aria-label="...">
+            <ul th:if="${ratings}" class="pagination1">
+              <li th:if="${currentPage != 0}" class="page-item1">
+                <a th:href="@{'/user/show-reviews/'+${currentPage - 1}}" class="page-link1" tabindex="-1">Previous</a>
+              </li>
+              <li th:classappend="${currentPage== i-1? 'active1': ''}" th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item1">
+                <a th:text="${i}" th:href="@{'/user/show-reviews/' + ${i-1}}" class="page-link1"></a></li>
+              
+              <li th:if="${currentPage + 1 != totalPage}" class="page-item1">
+                <a th:href="@{'/user/show-reviews/'+${currentPage + 1}}" class="page-link1" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+    </section>
+</body>
+</html>
