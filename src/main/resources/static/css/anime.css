@@ -13,9 +13,43 @@
 }
 
 .anime-image {
-    width: 30%;
     padding: 48px;
     height: 450px;
+}
+
+.anime-save-button {
+  width: 100%;
+  margin-top: 10px;
+  border: none;
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  border-radius: 2px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.anime-save1 {
+  background-color: #176e2b;
+}
+
+.anime-save-button:focus {
+  outline: none;
+}
+
+.anime-save1:hover {
+  cursor: pointer;
+  background-color: #28a745;
+  transition: all 0.5s ease;
+}
+
+.anime-remove1 {
+  background-color: #ac0000;
+}
+
+.anime-remove1:hover {
+  cursor: pointer;
+  background-color: #c40000;
+  transition: all 0.5s ease;
 }
 
 .anime-details-box {

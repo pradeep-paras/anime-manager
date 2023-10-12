@@ -8,5 +8,5 @@ import com.contact.myapp.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
         @Query("select u from User u where u.email = :email")
-        public User getUserByUserName(@Param("email") String email);   
+        public User getUserByUserName(@Param("email") String email); 
 }

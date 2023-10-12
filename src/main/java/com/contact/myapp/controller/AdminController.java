@@ -79,7 +79,8 @@ public class AdminController {
                     return "redirect:/admin";
                 }
                 System.out.println("Anime "+ anime);
-
+                anime.setAnime_rating(0);
+                anime.setTotal_count(0);
                 this.animeRepository.save(anime);
                 session.setAttribute("message", new Message("data saved successfully...", "success"));   
             } catch (Exception e) {

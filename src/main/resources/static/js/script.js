@@ -37,3 +37,39 @@ const search = () => {
         })
     }
 }
+
+const likeFunction = (rId, aId) => {
+    let url = `../like/${rId}`
+    debugger
+    fetch(url).then(response => {
+        return response.ok;
+    }).then(data => {
+        
+        console.log(data);
+        debugger
+        window.location="/anime/" + aId;
+        debugger
+        // let text = `<div class='list-group'>`;
+        // data.array.map(contact => {
+        //     text += `<a href="#" class='list-group-item list-group-item-action'>${contact.name}</a>`;
+        // });
+
+        // text += `</div>`;
+        // $(".search-result").html(text);
+        // $(".search-result").show();
+    }).catch(err => {
+        console.log("error found")
+        console.log(err)
+    })
+}
+
+// const load = (likes) => {
+//     console.log(likes);
+//     debugger
+//     let flag = likes.find((data) => {
+//         if(data.username == 'pradeep@gmail.com')return true;
+//         else {
+//             return false;
+//         }
+//     })
+// }

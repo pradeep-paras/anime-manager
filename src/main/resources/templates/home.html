@@ -19,6 +19,7 @@
             </div>
         </div>
         <div class="home-box">
+            <h4 th:if="${anime.isEmpty()}" style="margin-top:-70px; text-align: center;color: #b3b3b3;font-family: 'Quicksand';">There is no anime</h4>
             <div class="container-box">
                 <div th:each="a : ${anime}" class="container-image">
                 <a style="display: flex;flex-direction: column;">
@@ -32,7 +33,7 @@
             <!-- pagination -->
             <div class="pagination-box">
                 <nav aria-label="...">
-                <ul th:if="${anime}" class="pagination1">
+                <ul th:if="${anime.isEmpty() != true}" class="pagination1">
                     <li th:if="${currentPage != 0}" class="page-item1">
                     <a th:href="@{'/'+${currentPage - 1}}" class="page-link1" tabindex="-1">Previous</a>
                     </li>

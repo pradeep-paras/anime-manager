@@ -1,6 +1,7 @@
 package com.contact.myapp.entities;
 
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 
 import jakarta.persistence.CascadeType;
@@ -10,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -39,6 +41,10 @@ public class User {
 
     @Column(length = 80)
     private String about;
+
+    // for animes and users
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private Set<Anime> animes;
 
     // for contacts
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
@@ -142,6 +148,14 @@ public class User {
 
     public void setRatings(List<Rating> ratings) {
         this.ratings = ratings;
+    }
+
+    public Set<Anime> getAnimes() {
+        return animes;
+    }
+
+    public void setAnimes(Set<Anime> animes) {
+        this.animes = animes;
     }
 
     // @Override

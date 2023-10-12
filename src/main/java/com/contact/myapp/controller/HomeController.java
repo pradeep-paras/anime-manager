@@ -67,7 +67,7 @@ public class HomeController {
     @GetMapping("/{page}")
     public String Home(@PathVariable("page") Integer page, Model model){
         model.addAttribute("title", "Home - Smart Contact Manager");
-        Pageable pageable = PageRequest.of(page, 6);
+        Pageable pageable = PageRequest.of(page, 12);
         Page<Anime> anime = this.animeRepository.findAll(pageable);
         model.addAttribute("anime", anime);        
         model.addAttribute("currentPage", page);
@@ -146,7 +146,7 @@ public class HomeController {
     // }
 
     @GetMapping("/anime/{aId}")
-    public String showAnimeDetails(@PathVariable("aId") Integer aId, 
+    public String showAnimeDetails(@PathVariable("aId") Integer aId,
         Model model, Principal principal){
         try {    
         Optional<Anime> ani = this.animeRepository.findById(aId);
@@ -155,9 +155,19 @@ public class HomeController {
         Pageable pageable = PageRequest.of(0, 20);
 
         Page<Rating> ratings = this.ratingRepository.findRatingsByAnimeName(anime.getaId(), pageable);        
+        
+        boolean flag = false;
 
+        if(principal != null){
+            String userName = principal.getName();
+            User user = this.userRepository.getUserByUserName(userName);
+            flag = anime.getUsers().contains(user);
+        }
+
+        model.addAttribute("flag", flag);
         model.addAttribute("anime", anime);
         model.addAttribute("ratings", ratings);
+        model.addAttribute("fields", null);
     //     String userName = principal.getName();
     //     User user = this.userRepository.getUserByUserName(userName);
 
@@ -173,8 +183,10 @@ public class HomeController {
     }
 
     @PostMapping("/anime/process-rating/{aId}")
-    public String processRating(@PathVariable("aId") Integer aId,
-        @ModelAttribute Rating rating,
+    public String processRating(@Valid @ModelAttribute Rating rating,
+        BindingResult error_value,
+        @PathVariable("aId") Integer aId,
+        Model model,
         Principal principal, HttpSession session){
 
         try {
@@ -183,11 +195,21 @@ public class HomeController {
                 return "redirect:/signup";
             }
 
-            String name = principal.getName();
-            User user = this.userRepository.getUserByUserName(name);
-
             Optional<Anime> ani = this.animeRepository.findById(aId);
             Anime anime = ani.get();
+
+            if(error_value.hasErrors()){
+                System.out.println("error_value" + error_value);
+                model.addAttribute("anime", anime);
+                model.addAttribute("rating", rating);
+                model.addAttribute("fields", true);
+                return "/anime_details";
+            }
+
+            model.addAttribute("fields", false);
+
+            String name = principal.getName();
+            User user = this.userRepository.getUserByUserName(name);
 
             float total = anime.getTotal_count();
 
@@ -197,7 +219,8 @@ public class HomeController {
             total = total + Float.parseFloat(rating.getRate());
             
             anime.setTotal_count(total);
-            anime.setAnime_rating((total/size));
+            String r = String.format("%.2f", (total/size));
+            anime.setAnime_rating(Float.parseFloat(r));
 
             rating.setAnime(anime);
 
@@ -228,12 +251,55 @@ public class HomeController {
         List<Anime> anime = this.animeRepository.getAnimeByAnimeName(search);
 
         // List<Anime> anime = this.animeRepository.findByAnime_NameContaining(search);
-
         model.addAttribute("anime", anime);
         model.addAttribute("currentPage", 0);
         model.addAttribute("totalPage", 1);
 
         return "home";
+    }
+
+    // Saved anime by user's profile
+    @PostMapping("/anime/save/{aId}")
+    public String saveAnime(@PathVariable("aId") Integer aId, Principal principal, Model model, HttpSession session){
+        
+        Anime anime = animeRepository.findById(aId).get();
+        if(principal == null){
+            session.setAttribute("message", new Message("please login", "alert-danger"));
+            return "redirect:/anime/{aId}";
+        }
+        
+        // get user
+        String name = principal.getName();
+        User user = this.userRepository.getUserByUserName(name);
+
+        boolean flag = false;
+
+        if(principal != null){
+            flag = anime.getUsers().contains(user);
+        }
+
+        if(flag){
+            anime.getUsers().remove(user);
+            flag = false;
+        } else {
+            anime.getUsers().add(user);
+            flag = true;
+        }
+        
+        this.animeRepository.save(anime);
+
+        Pageable pageable = PageRequest.of(0, 20);
+
+        Page<Rating> ratings = this.ratingRepository.findRatingsByAnimeName(anime.getaId(), pageable);
+
+        model.addAttribute("flag", flag);
+
+        model.addAttribute("anime", anime);
+        model.addAttribute("ratings", ratings);
+        model.addAttribute("fields", null);
+        session.setAttribute("message", new Message("anime saved", "alert-success"));
+
+        return "/anime_details";
     }
 
 }

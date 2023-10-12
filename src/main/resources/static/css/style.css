@@ -2,11 +2,10 @@ body {
     background-color: #252525;
 }
 
-/* container-image rating-star-div box-image-div */
+/* active2 box-image page-link1 box-image-div */
 
 .body1 {
     top: 0;
-    opacity: .2;
     /* filter: blur(3px);
     -webkit-filter: blur(3px); */
     background-size: cover;
@@ -21,6 +20,7 @@ body {
 
 .background-anime {
   position: absolute;
+  filter: brightness(0.2) grayscale(1);
 }
 
 .btn-color{
@@ -194,7 +194,7 @@ body {
     cursor: pointer;
     transform: scale(1.02, 1.02);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: all 0.3s ease-in-out;
+    transition: all 0.2s ease-in-out;
   }
 
   .search-div {
@@ -262,8 +262,8 @@ body {
     margin-left: 25px;
     margin-right: 25px;
     height: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     justify-content: center;
     align-items: center;
     /* -webkit-filter: grayscale(0);
@@ -561,7 +561,7 @@ body {
 
   .page-item1 a {
     display: block;
-    font-family: cursive;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     padding: 2px 7px;
   }
 
@@ -572,4 +572,50 @@ body {
 
   a:hover {
     text-decoration: none;
+  }
+
+  .active2 a {
+    color: red;
+    background-color: transparent;
+  }
+
+  .nav-link2 {
+    background-size: 200% 200%;
+    padding: 4px 5px 4px 5px;
+    margin: 0px 3px 0px 3px;
+    border-radius: 2px;
+    background-image: linear-gradient(to top, #A72424 50%, transparent 50%);
+    transition: background-position 200ms, color 200ms ease, border-color 200ms ease;
+  }
+
+  .nav-link2 {
+    color: white;
+  }
+
+  .nav-link2:hover {
+    color: black;
+    background-image: linear-gradient(to top, #A72424 51%, transparent 50%);
+    background-position: 0 100%;
+    transition: background-position 200ms, color 200ms ease, border-color 200ms ease;
+  }
+
+  .active-user {
+    color: white;
+  }
+
+  /* For comment like section */
+  .div-likes {
+    margin-left: 53px;
+    margin-top: 5px;
+  }
+
+  .like-button {
+    background-color: transparent;
+    text-decoration: underline;
+    color: #007bff;
+  }
+  
+  .like-button:hover {
+    cursor: pointer;
+    color: #0160c7;
   }

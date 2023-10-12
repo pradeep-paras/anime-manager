@@ -15,7 +15,8 @@
           </div>
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form> -->
-      
+        <h4 th:if="${ratings.isEmpty()}" style="margin-top:-70px; text-align: center;color: #b3b3b3;font-family: 'Quicksand';">There is no rating</h4>
+        
         <div class="">
             <div class="show-ratings">
                 <div th:each="r : ${ratings}" class="rating-box">
@@ -47,7 +48,7 @@
           <!-- pagination -->
           <div class="pagination-box">
           <nav aria-label="...">
-            <ul th:if="${ratings}" class="pagination1">
+            <ul th:if="${ratings.isEmpty() != true}" class="pagination1">
               <li th:if="${currentPage != 0}" class="page-item1">
                 <a th:href="@{'/user/show-reviews/'+${currentPage - 1}}" class="page-link1" tabindex="-1">Previous</a>
               </li>

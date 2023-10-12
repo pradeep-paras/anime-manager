@@ -2,11 +2,14 @@ package com.contact.myapp.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.contact.myapp.entities.Anime;
+import com.contact.myapp.entities.User;
 
 
 public interface AnimeRepository extends JpaRepository<Anime, Integer> {
@@ -14,6 +17,9 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer> {
     // Finds single anime by name @Query("Select c from Registration c where c.place like %:place%")
     @Query("select a from Anime a where a.anime_name like %:anime%")
     public List<Anime> getAnimeByAnimeName(@Param("anime") String anime);
+
+    // get all animes for login user
+    public Page<Anime> findByUsers(User user, Pageable pageable);
 
     // fetch animes
     // public List<Anime> findByAnime_NameContaining(String anime_name);

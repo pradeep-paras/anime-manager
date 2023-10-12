@@ -7,7 +7,21 @@
 </head>
 <body>
     <section>
+        <div>Review Saved Successfully</div>
         <div class="anime-main">
+            <div style="display: flex; justify-content: center;">
+                <div id="mydiv" style="position: fixed;
+                    top: 30px;
+                    z-index: 10;
+                    display: flex;
+                    align-items: center;"
+                    th:classappend="${session.message.type}" th:if="${session.message}" class="alert" role="alert">
+                    <p style="margin: 0px;margin-right: 8px;" th:text="${session.message.content}"></p>
+                    <i th:if="${session.message.type == 'alert-success'}" class="fa fa-thumbs-up"></i>
+                    <i th:unless="${session.message.type == 'alert-success'}" class="fa fa fa-user"></i>                    
+                    <th:block th:text="${@sessionHelper.removeMessageFromSession()}" class="text-center"></th:block>
+                </div>
+            </div>
             <div class="anime-details">
                 <div class="anime-image">
                     <img style="width: 240px;
@@ -15,6 +29,7 @@
                         border: solid;
                         border-color: #ced4da;
                         border-width: 8px;" th:src="${anime.imageUrl}"/>
+                    <form method="post" th:action="@{'/anime/save/'+${anime.aId}}"><button th:class="'anime-save-button '+${flag ? 'anime-remove1' : 'anime-save1'}" th:text="${flag ? 'Remove' : 'Save'}" type="submit"></button></form>
                 </div>
                 <div class="anime-details-box">
                     <h2 th:text="${anime.anime_name}"></h2>
@@ -73,13 +88,21 @@
                         </label>
                       </div>
                     </div>
+                    <div th:if="${fields}">
+                        <div style="display: block;" class="invalid-feedback" th:each="e : ${#fields.errors('rate')}" th:text="${e}">
+                        </div>
+                    </div>
                     <!-- star -->
 
                     <div class="field3" tabindex="3">
                         <label class="anime-label" for="message">
                             Review
                         </label>
-                        <textarea class="text-comment" name="review" id="review" placeholder="description" required></textarea>
+                        <textarea class="text-comment" name="review" id="review" placeholder="description"></textarea>
+                        <div th:if="${fields}">
+                            <div style="display: block;" class="invalid-feedback" th:each="e : ${#fields.errors('review')}" th:text="${e}">
+                            </div>
+                        </div>
                     </div>
                     <button class="anime-message-button" type="submit">Send Message</button>
                 </form>
@@ -93,6 +116,12 @@
                     </div>
                     <div class="rating">
                         <span th:text="${review.review}">If you're looking for random paragraphs, you've come to the right place. When a random word or a random sentence isn't quite enough, the next logical step is to find a random paragraph. We created the Random Paragraph Generator with you in mind. The process is quite simple. Choose the number of random paragraphs you'd like to see and click the button. Your chosen number of paragraphs will instantly appear.</span>
+                    </div>
+                    <div class="div-likes">
+                        <!-- review.likes.forEach(e->) -->
+                        <i th:if="${true}" class="fa fa-heart" style="font-size:18px;color:red"></i>
+                        <span style="color:white;" th:text="${review.like_count}"></span>
+                        <button class="like-button" th:onclick="|likeFunction(${review.rId}, ${review.anime.aId})|">Like</button>
                     </div>
                 </div>
             </div>

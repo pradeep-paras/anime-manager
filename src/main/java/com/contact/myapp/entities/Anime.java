@@ -2,6 +2,7 @@ package com.contact.myapp.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -24,7 +26,7 @@ public class Anime {
     private int aId;
     
     @NotBlank(message = "Name field is required")
-    @Size(max = 20, message = "maximum 20 characters are allowed")
+    @Size(max = 50, message = "maximum 20 characters are allowed")
     private String anime_name;
 
     @NotBlank(message = "image url is required")
@@ -37,12 +39,16 @@ public class Anime {
 
     private float total_count;
 
-    @Column(length = 1000)
+    @Column(length = 1500)
     private String description;
 
     // for ratings
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "anime")
     private List<Rating> ratings = new ArrayList<>();
+
+    // for animes and users
+    @ManyToMany
+    private Set<User> users;
 
     public int getaId() {
         return aId;
@@ -112,6 +118,14 @@ public class Anime {
         this.ratings = ratings;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    } 
+
     public Anime(int aId, String anime_name, String imageUrl, String status, float anime_rating, String description, float total_count) {
         this.aId = aId;
         this.anime_name = anime_name;
@@ -120,6 +134,6 @@ public class Anime {
         this.anime_rating = anime_rating;
         this.description = description;
         this.total_count = total_count;
-    } 
+    }
 
 }

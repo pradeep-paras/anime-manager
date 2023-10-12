@@ -1,5 +1,7 @@
 package com.contact.myapp.controller;
 
+import java.util.List;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.contact.myapp.dao.AnimeRepository;
 import com.contact.myapp.dao.ContactRepository;
 import com.contact.myapp.dao.RatingRepository;
 import com.contact.myapp.dao.UserRepository;
+import com.contact.myapp.entities.Anime;
 import com.contact.myapp.entities.Contact;
 import com.contact.myapp.entities.Rating;
 import com.contact.myapp.entities.User;
@@ -50,6 +54,9 @@ public class UserController {
     @Autowired
     private RatingRepository ratingRepository;
 
+    @Autowired
+    private AnimeRepository animeRepository;
+
     // method for adding common data to response
     @ModelAttribute
     public void addCommonData(Model model, Principal principal) {
@@ -62,8 +69,28 @@ public class UserController {
 
     }
 
-    @RequestMapping("/index")
-    public String dashboard(Model model,Principal principal){
+    @GetMapping("/index")
+    public String dashboard1() {
+        return "redirect:/user/index/0";
+    }
+
+    @RequestMapping("/index/{page}")
+    public String dashboard(@PathVariable("page") Integer page,Model model,Principal principal){
+
+        String name = principal.getName();
+        User user = this.userRepository.getUserByUserName(name);
+
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Page<Anime> anime = this.animeRepository.findByUsers(user, pageable);
+        System.out.println("Animes User: "+anime.getNumber());
+        
+        System.out.println("Total Pages: "+anime.getTotalPages());
+        System.out.println("Anime saved: "+anime.getTotalElements());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPage", anime.getTotalPages());
+        model.addAttribute("anime", anime);
+
         return "user/user_dashboard";
     }
 
@@ -128,10 +155,12 @@ public class UserController {
         User user  = this.userRepository.getUserByUserName(userName);
         // current page
         // per page size = 5
-        Pageable pageable = PageRequest.of(page, 1);
+        Pageable pageable = PageRequest.of(page, 10);
 
         Page<Rating> ratings = this.ratingRepository.findRatingsByUser(user.getId(), pageable);
 
+        System.out.println("Total Pages: "+ratings.getTotalPages());
+        System.out.println("Rating saved: "+ratings.getTotalElements());
         model.addAttribute("ratings", ratings);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPage", ratings.getTotalPages());
@@ -157,7 +186,21 @@ public class UserController {
     public String deleteReview(@PathVariable("rId") Integer rId, Principal principal, HttpSession session){
         Optional<Rating> rat = this.ratingRepository.findById(rId);
         Rating rating = rat.get();
-        
+
+        System.out.println("Anime Total count"+rating.getAnime().getTotal_count());
+
+        float newtotal = rating.getAnime().getTotal_count() - Float.parseFloat(rating.getRate());
+
+        rating.getAnime().setTotal_count(newtotal);
+
+        int total = rating.getAnime().getRatings().size();
+
+        if(total > 1){
+            rating.getAnime().setAnime_rating(newtotal/total);
+        } else {
+            rating.getAnime().setAnime_rating(newtotal);
+        } 
+
         String userName = principal.getName();
         User user = this.userRepository.getUserByUserName(userName);
         //
