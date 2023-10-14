@@ -3,7 +3,7 @@ package com.contact.myapp.controller;
 import java.security.Principal;
 import java.util.Optional;
 
-import java.util.List;
+// import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,10 +66,13 @@ public class HomeController {
     
     @GetMapping("/{page}")
     public String Home(@PathVariable("page") Integer page, Model model){
+        String search = "";
+        search.isEmpty();
         model.addAttribute("title", "Home - Smart Contact Manager");
         Pageable pageable = PageRequest.of(page, 12);
         Page<Anime> anime = this.animeRepository.findAll(pageable);
-        model.addAttribute("anime", anime);        
+        model.addAttribute("anime", anime);
+        model.addAttribute("search", search);    
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPage", anime.getTotalPages());
         
@@ -104,6 +107,10 @@ public class HomeController {
             if(error_value.hasErrors()){
                 model.addAttribute("user", user);
                 return "signup";
+            }
+
+            if(user.getImageUrl() == ""){
+                user.setImageUrl("https://dragonball.guru/wp-content/uploads/2021/03/krillin-profile-1-400x400.png");
             }
 
             user.setRole("ROLE_USER");
@@ -245,15 +252,32 @@ public class HomeController {
         return "redirect:/anime/{aId}";
     }
 
-    @PostMapping("/search")
-    public String searchAnime(@Valid @ModelAttribute("search") String search, Model model){
-
-        List<Anime> anime = this.animeRepository.getAnimeByAnimeName(search);
-
-        // List<Anime> anime = this.animeRepository.findByAnime_NameContaining(search);
+    @PostMapping("/result")
+    public String searchAnime(@ModelAttribute("search") String search, Model model){
+        int page = 0;
+        // List<Anime> anime = this.animeRepository.getAnimeByAnimeName(search);
+        Pageable pageable = PageRequest.of(page, 2);
+        Page<Anime> anime = this.animeRepository.getAnimeByAnimeName(search, pageable);
         model.addAttribute("anime", anime);
-        model.addAttribute("currentPage", 0);
-        model.addAttribute("totalPage", 1);
+        model.addAttribute("search", search);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPage", anime.getTotalPages());
+
+        return "home";
+    }
+
+    @GetMapping("/result/{page}")
+    public String searchReult(
+        @RequestParam(value = "search", required = false, 
+        defaultValue = "No query specified") String search, 
+        @PathVariable("page") Integer page, Model model) {
+        System.out.println("query value" + search);
+        Pageable pageable = PageRequest.of(page, 2);
+        Page<Anime> anime = this.animeRepository.getAnimeByAnimeName(search, pageable);
+        model.addAttribute("anime", anime);
+        model.addAttribute("search", search);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPage", anime.getTotalPages());
 
         return "home";
     }

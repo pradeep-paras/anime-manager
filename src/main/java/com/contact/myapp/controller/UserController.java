@@ -1,6 +1,6 @@
 package com.contact.myapp.controller;
 
-import java.util.List;
+// import java.util.List;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ import com.contact.myapp.entities.User;
 import com.contact.myapp.helper.Message;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
@@ -271,6 +273,40 @@ public class UserController {
         return "redirect:/user/show-contacts/0";
     }
 
+    @GetMapping("/your-profile")
+    public String yourProfile(Principal principal, Model model){
+
+        User user = userRepository.getUserByUserName(principal.getName());
+        model.addAttribute("user", user);
+
+        return "user/update_user";
+    }
+
+    @PostMapping("/update-profile")
+    public String updateProfile(@Valid @ModelAttribute User user, 
+        BindingResult error_value, Model model, Principal principal,
+        HttpSession session){
+        try {
+            if(error_value.hasErrors()){
+                model.addAttribute("user", user);
+                return "user/update_user";
+            }
+
+            User result = userRepository.save(user);
+            model.addAttribute("user", result);
+            session.setAttribute("message", new Message("User profile updated successfully!", "alert-success"));
+
+            return "user/update_user";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("user", user);
+            session.setAttribute("message", new Message("Something went wrong !!" + e.getMessage(), "alert-danger"));
+            
+            return "user/update_user";
+        }
+    }
+
     @GetMapping("/settings")
     public String openSettings(){
         return "user/settings";
@@ -293,5 +329,28 @@ public class UserController {
             return "redirect:/user/settings";
         }
         return "redirect:/user/settings";
+    }
+
+    // remove anime by user's profile
+    @PostMapping("/remove-anime/{aId}")
+    public String removeAnime(@PathVariable("aId") Integer aId, Principal principal, Model model, HttpSession session){
+        
+        Anime anime = animeRepository.findById(aId).get();
+        if(principal == null){
+            session.setAttribute("message", new Message("please login", "alert-danger"));
+            return "redirect:/0";
+        }
+        
+        // get user
+        String name = principal.getName();
+        User user = this.userRepository.getUserByUserName(name);
+
+        anime.getUsers().remove(user);
+        
+        this.animeRepository.save(anime);
+
+        session.setAttribute("message", new Message("anime removed", "alert-success"));
+
+        return "redirect:/user/index/0";
     }
 }

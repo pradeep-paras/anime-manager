@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::Layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{user/base::Layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,18 @@
             
             <th:block th:text="${@sessionHelper.removeMessageFromSession()}" class="text-center"></th:block>
           </div>
-        <form class="card-body cardbody-color p-lg-5" novalidate th:action="@{/do_register}" method="post" th:object="${user}">
+        <form class="card-body cardbody-color p-lg-5" novalidate th:action="@{/user/update-profile}" method="post" th:object="${user}">
+          <div style="text-align: center;">
+            <img style="margin-top: 20px;
+            width: 100px;
+            margin-bottom: 7px;
+            height: 100px;
+            border-radius: 25px;
+            background-color: orange;" 
+            th:src="${user.imageUrl}"/>
+            <div style="font-size: 15px;color: white;margin-bottom: 10px;" th:text="${user.email}"></div>
+          </div>
+          <input style="display: none;" name="id" th:value="${user.id}"/>
           <div class="form-group">
             <label class="signup-label" for="user_name">User Name</label>
             <input
@@ -62,28 +73,8 @@
             <small id="emailHelp" class="form-text signup-label">please paste image url for your profile picture</small>
           </div>
 
-          <div class="form-group">
-              <label class="signup-label" for="password">Password</label>
-              <input
-                name="password"
-                type="password" 
-                class="form-control input-mail" 
-                id="password" 
-                th:classappend="${#fields.hasErrors('password') ? 'is-invalid' : ''}" 
-                placeholder="Enter Here">
-              <small id="emailHelp" class="form-text signup-label">We'll never share your email with anyone else.</small>
-              <div class="invalid-feedback" th:each="e : ${#fields.errors('password')}" th:text="${e}">
-              </div>
-            </div>
-
-          <div class="form-check check_box">
-            <input name="check_box" type="checkbox" class="form-check-input" id="check_box">
-            <label class="form-check-label ml-3" for="check_box">Accept termas and conditions</label>
-          </div>
-
           <div>
             <button type="submit" class="btn btn-color px-5 mb-5 w-40 mr-3">Submit</button>
-            <button type="reset" class="btn btn-color px-5 mb-5 w-40">Reset</button>
           </div>
         </form>  
       </div>

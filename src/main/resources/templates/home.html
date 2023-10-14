@@ -10,7 +10,7 @@
         <div style="text-align: center;margin-top: 150px;">
             <div class="search-box">
                 <img class="search-image" style="width: 100%;" th:src="@{/image/naruto.jpg}"/>
-                <form style="margin-top: -25px;" method="post" th:action="@{/search}" th:value="${search}">
+                <form style="margin-top: -25px;" method="post" th:action="@{/result}" th:value="${search}">
                     <div class="search-div">
                         <input placeholder="Search anime.." name="search" th:value="${search}" class="search-input" />
                         <button class="search-button new-button" type="submit">Search</button>
@@ -35,13 +35,17 @@
                 <nav aria-label="...">
                 <ul th:if="${anime.isEmpty() != true}" class="pagination1">
                     <li th:if="${currentPage != 0}" class="page-item1">
-                    <a th:href="@{'/'+${currentPage - 1}}" class="page-link1" tabindex="-1">Previous</a>
+                    <a th:if="${search.isEmpty() != true}" th:value="${search}" th:href="@{'/result/'+${currentPage - 1}+'?search='+${search}}" class="page-link1" tabindex="-1">Previous</a>
+                    <a th:unless="${search.isEmpty() != true}" th:href="@{'/'+${currentPage - 1}}" class="page-link1" tabindex="-1">Previous</a>
                     </li>
                     <li th:classappend="${currentPage== i-1? 'active1': ''}" th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item1">
-                    <a th:text="${i}" th:href="@{'/' + ${i-1}}" class="page-link1"></a></li>
+                        <a th:text="${i}" th:if="${search.isEmpty() != true}" th:value="${search}" th:href="@{'/result/'+${i-1}+'?search='+${search}}" class="page-link1" tabindex="-1"></a>
+                        <a th:text="${i}" th:unless="${search.isEmpty() != true}" th:href="@{'/' + ${i-1}}" class="page-link1"></a>
+                    </li>
                     
                     <li th:if="${currentPage + 1 != totalPage}" class="page-item1">
-                    <a th:href="@{'/'+${currentPage + 1}}" class="page-link1" href="#">Next</a>
+                    <a th:if="${search.isEmpty() != true}" th:value="${search}" th:href="@{'/result/'+${currentPage + 1}+'?search='+${search}}" class="page-link1" tabindex="-1">Next</a>
+                    <a th:unless="${search.isEmpty() != true}" th:href="@{'/'+${currentPage + 1}}" class="page-link1" href="#">Next</a>
                     </li>
                 </ul>
                 </nav>

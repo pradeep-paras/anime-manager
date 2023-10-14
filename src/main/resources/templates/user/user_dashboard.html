@@ -7,14 +7,16 @@
 </head>
 <body>
     <section>
-      <div class="container-box">
-        <div style="text-align: center;color: white;" th:each="ani : ${anime}" class="rating-box">
+      <div style="margin-top: 100px;" class="container-box">
+        <div style="text-align: center;color: white;" th:each="ani : ${anime}" class="rating-box1">
           <div th:text="${ani.anime_name}"></div>
-          <div><img class="box-image" th:src="${ani.imageUrl}"/></div>
-          <div>
-            <div>status:<span th:text="${ani.status}"></span></div>
-            <div th:text="${ani.anime_rating}"></div>
+          <div class="image-div1"><img class="box-image" th:src="${ani.imageUrl}"/>
+            <div class="status-div">
+              <div>status:<span th:text="${ani.status}"></span></div>
+              <div th:text="${ani.anime_rating}"></div>
+            </div>
           </div>
+          <form method="post" th:action="@{'/user/remove-anime/'+${ani.aId}}"><button class="anime-remove-class" type="submit">Remove</button></form>
         </div>
       </div>
         <!-- pagination -->

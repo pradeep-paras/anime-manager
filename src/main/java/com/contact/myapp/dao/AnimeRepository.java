@@ -15,8 +15,9 @@ import com.contact.myapp.entities.User;
 public interface AnimeRepository extends JpaRepository<Anime, Integer> {
     
     // Finds single anime by name @Query("Select c from Registration c where c.place like %:place%")
-    @Query("select a from Anime a where a.anime_name like %:anime%")
-    public List<Anime> getAnimeByAnimeName(@Param("anime") String anime);
+    @Query("select a from Anime a where a.anime_name like %:search%")
+    public Page<Anime> getAnimeByAnimeName(@Param("search") String search, Pageable pageable);
+    // public List<Anime> getAnimeByAnimeName(@Param("anime") String anime); in this method change param anime to search
 
     // get all animes for login user
     public Page<Anime> findByUsers(User user, Pageable pageable);
